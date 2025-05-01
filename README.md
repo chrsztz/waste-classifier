@@ -192,6 +192,3 @@ The system includes an admin panel for monitoring and statistics:
 3. **Web interface not accessible**:
    - Verify the Flask server is running
    - Check for firewall issues or port conflicts
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
