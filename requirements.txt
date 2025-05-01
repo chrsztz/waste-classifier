@@ -1,0 +1,22 @@
+# Hardware control
+RPi.GPIO==0.7.1
+picamera==1.13
+
+# Computer vision and ML
+opencv-python==4.7.0.72
+torch==2.0.0
+torchvision==0.15.1
+ultralytics==8.0.20  # For YOLO models
+numpy==1.24.3
+Pillow==9.5.0
+
+# Web server
+Flask==2.3.2
+Flask-SocketIO==5.3.3
+Flask-CORS==3.0.10
+python-engineio==4.4.1
+python-socketio==5.8.0
+eventlet==0.33.3  # Needed for SocketIO
+
+# Utilities
+python-dotenv==1.0.0 

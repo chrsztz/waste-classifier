@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Classifier Admin Panel</title>
+    <!-- Include Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#fcd34d',
+                        glass: '#60a5fa',
+                        metal: '#9ca3af',
+                        others: '#a3e635'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold text-gray-800">
+                    <i class="fas fa-user-shield text-blue-600 mr-2"></i>
+                    Admin Panel
+                </h1>
+                <a href="index.html" class="text-blue-600 hover:text-blue-800">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Main Interface
+                </a>
+            </div>
+        </header>
+
+        <main>
+            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+                <h2 class="text-2xl font-bold text-center mb-6">Admin Panel</h2>
+                
+                <!-- Tab navigation -->
+                <div class="flex border-b mb-6">
+                    <button class="py-2 px-4 text-blue-600 border-b-2 border-blue-600 font-medium" id="statistics-tab">
+                        <i class="fas fa-chart-pie inline mr-2"></i>
+                        Statistics
+                    </button>
+                    <button class="py-2 px-4 text-gray-500 hover:text-blue-500" id="details-tab">
+                        <i class="fas fa-table inline mr-2"></i>
+                        Classification Details
+                    </button>
+                </div>
+                
+                <!-- Statistics tab -->
+                <div id="statistics-content">
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="text-lg font-medium mb-4 text-center">Bin Fill Levels</h3>
+                            <div class="grid grid-cols-4 gap-2">
+                                <!-- Paper Bin -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <i class="fas fa-file-alt text-paper"></i>
+                                        <span class="capitalize text-sm">Paper</span>
+                                    </div>
+                                    <div class="w-full h-20 bg-gray-200 rounded overflow-hidden relative mt-1">
+                                        <div class="absolute bottom-0 left-0 right-0 bg-paper" style="height: 65%"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">
+                                            65%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Glass Bin -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <i class="fas fa-glass-whiskey text-glass"></i>
+                                        <span class="capitalize text-sm">Glass</span>
+                                    </div>
+                                    <div class="w-full h-20 bg-gray-200 rounded overflow-hidden relative mt-1">
+                                        <div class="absolute bottom-0 left-0 right-0 bg-glass" style="height: 40%"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">
+                                            40%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Metal Bin -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <i class="fas fa-cog text-metal"></i>
+                                        <span class="capitalize text-sm">Metal</span>
+                                    </div>
+                                    <div class="w-full h-20 bg-gray-200 rounded overflow-hidden relative mt-1">
+                                        <div class="absolute bottom-0 left-0 right-0 bg-metal" style="height: 25%"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">
+                                            25%
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Others Bin -->
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-1">
+                                        <i class="fas fa-trash text-others"></i>
+                                        <span class="capitalize text-sm">Others</span>
+                                    </div>
+                                    <div class="w-full h-20 bg-gray-200 rounded overflow-hidden relative mt-1">
+                                        <div class="absolute bottom-0 left-0 right-0 bg-others" style="height: 80%"></div>
+                                        <div class="absolute inset-0 flex items-center justify-center text-sm font-bold">
+                                            80%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="text-lg font-medium mb-4 text-center">Classification Summary</h3>
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-white p-3 rounded shadow">
+                                    <div class="text-3xl font-bold text-gray-700">145</div>
+                                    <div class="text-sm text-gray-500">Total Classifications</div>
+                                </div>
+                                <div class="bg-white p-3 rounded shadow">
+                                    <div class="text-3xl font-bold text-green-600">128</div>
+                                    <div class="text-sm text-gray-500">Correct</div>
+                                </div>
+                                <div class="bg-white p-3 rounded shadow">
+                                    <div class="text-3xl font-bold text-red-500">17</div>
+                                    <div class="text-sm text-gray-500">Corrected</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h4 class="text-center text-gray-700 font-medium mb-2">Accuracy Rate</h4>
+                                <div class="relative pt-1">
+                                    <div class="flex mb-2 items-center justify-between">
+                                        <div>
+                                            <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-green-600 bg-green-200">
+                                                88%
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="flex h-2 overflow-hidden text-xs bg-gray-200 rounded">
+                                        <div style="width: 88%" class="bg-green-500"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="text-lg font-medium mb-4 text-center">Classifications by Bin</h3>
+                            <canvas id="categoryPieChart"></canvas>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="text-lg font-medium mb-4 text-center">Original Model Classes</h3>
+                            <canvas id="originalClassPieChart"></canvas>
+                        </div>
+                        
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <h3 class="text-lg font-medium mb-4 text-center">Accuracy</h3>
+                            <canvas id="accuracyBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Details tab (hidden by default) -->
+                <div id="details-content" class="hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Time
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Image
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Original Class
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Bin Category
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Confidence
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Corrected
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <!-- History Item 1 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-11-25 14:30:22
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-12 w-12 bg-gray-200 rounded overflow-hidden">
+                                            <img src="https://via.placeholder.com/48" alt="Classified waste" class="h-full w-full object-cover">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-file-alt text-paper mr-2"></i>
+                                            <span class="capitalize">Cardboard</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-file-alt text-paper mr-2"></i>
+                                            <span class="capitalize">Paper</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        92.5%
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            No
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900">
+                                            <i class="fas fa-eye inline"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- History Item 2 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-11-25 14:28:45
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-12 w-12 bg-gray-200 rounded overflow-hidden">
+                                            <img src="https://via.placeholder.com/48" alt="Classified waste" class="h-full w-full object-cover">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-glass-whiskey text-glass mr-2"></i>
+                                            <span class="capitalize">Glass</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-glass-whiskey text-glass mr-2"></i>
+                                            <span class="capitalize">Glass</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        87.2%
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            No
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900">
+                                            <i class="fas fa-eye inline"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- History Item 3 -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-11-25 14:25:17
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-12 w-12 bg-gray-200 rounded overflow-hidden">
+                                            <img src="https://via.placeholder.com/48" alt="Classified waste" class="h-full w-full object-cover">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-trash text-others mr-2"></i>
+                                            <span class="capitalize">Plastic</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-trash text-others mr-2"></i>
+                                            <span class="capitalize">Others</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        76.8%
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            Yes
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900">
+                                            <i class="fas fa-eye inline"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                
+                                <!-- More items -->
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        2023-11-25 14:22:05
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="h-12 w-12 bg-gray-200 rounded overflow-hidden">
+                                            <img src="https://via.placeholder.com/48" alt="Classified waste" class="h-full w-full object-cover">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-cog text-metal mr-2"></i>
+                                            <span class="capitalize">Metal</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-cog text-metal mr-2"></i>
+                                            <span class="capitalize">Metal</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        94.1%
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            No
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900">
+                                            <i class="fas fa-eye inline"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image details modal (hidden by default) -->
+            <div id="image-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg max-w-3xl w-full max-h-screen overflow-auto">
+                    <div class="flex justify-between items-center p-4 border-b">
+                        <h3 class="text-xl font-medium">Classification Details</h3>
+                        <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                            &times;
+                        </button>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Image -->
+                            <div>
+                                <h4 class="font-medium mb-2">Image</h4>
+                                <div class="bg-gray-200 rounded-lg overflow-hidden h-64 w-full">
+                                    <img src="https://via.placeholder.com/400x300" alt="Classified waste" class="h-full w-full object-contain">
+                                </div>
+                            </div>
+                            
+                            <!-- Classification details -->
+                            <div>
+                                <h4 class="font-medium mb-2">Classification Information</h4>
+                                <div class="bg-gray-50 p-4 rounded-lg">
+                                    <div class="grid grid-cols-2 gap-y-4">
+                                        <div class="font-medium">Time:</div>
+                                        <div>2023-11-25 14:30:22</div>
+                                        
+                                        <div class="font-medium">Original Class:</div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-file-alt text-paper mr-2"></i>
+                                            <span class="ml-1 capitalize">Cardboard</span>
+                                        </div>
+                                        
+                                        <div class="font-medium">Bin Category:</div>
+                                        <div class="flex items-center">
+                                            <i class="fas fa-file-alt text-paper mr-2"></i>
+                                            <span class="ml-1 capitalize">Paper</span>
+                                        </div>
+                                        
+                                        <div class="font-medium">Confidence:</div>
+                                        <div>92.5%</div>
+                                        
+                                        <div class="font-medium">Corrected:</div>
+                                        <div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                No
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bin category scores -->
+                                    <div class="mt-6">
+                                        <h5 class="font-medium mb-2">Bin Category Scores</h5>
+                                        <div class="space-y-2">
+                                            <!-- Paper score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Paper:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-paper" style="width: 92.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">92.5%</div>
+                                            </div>
+                                            
+                                            <!-- Glass score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Glass:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-glass" style="width: 2.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">2.5%</div>
+                                            </div>
+                                            
+                                            <!-- Metal score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Metal:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-metal" style="width: 1.2%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">1.2%</div>
+                                            </div>
+                                            
+                                            <!-- Others score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Others:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-others" style="width: 3.8%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">3.8%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Original model scores -->
+                                    <div class="mt-6">
+                                        <h5 class="font-medium mb-2">Original Model Scores</h5>
+                                        <div class="space-y-2">
+                                            <!-- Cardboard score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Cardboard:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 92.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">92.5%</div>
+                                            </div>
+                                            
+                                            <!-- Glass score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Glass:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 1.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">1.5%</div>
+                                            </div>
+                                            
+                                            <!-- Metal score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Metal:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 0.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">0.5%</div>
+                                            </div>
+                                            
+                                            <!-- Paper score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Paper:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 4.2%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">4.2%</div>
+                                            </div>
+                                            
+                                            <!-- Plastic score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Plastic:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 0.8%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">0.8%</div>
+                                            </div>
+                                            
+                                            <!-- Trash score -->
+                                            <div class="flex items-center">
+                                                <div class="w-20 capitalize">Trash:</div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-200 h-4 rounded-full overflow-hidden">
+                                                        <div class="h-full bg-blue-500" style="width: 0.5%"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="ml-2 w-16 text-right">0.5%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="bg-white py-4 text-center text-gray-500 text-sm mt-8">
+        <p>Smart Waste Classifier &copy; 2023</p>
+    </footer>
+    
+    <!-- JavaScript for interactive elements -->
+    <script>
+        // Tab switching
+        document.getElementById('statistics-tab').addEventListener('click', function() {
+            document.getElementById('statistics-content').classList.remove('hidden');
+            document.getElementById('details-content').classList.add('hidden');
+            document.getElementById('statistics-tab').classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'font-medium');
+            document.getElementById('statistics-tab').classList.remove('text-gray-500');
+            document.getElementById('details-tab').classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'font-medium');
+            document.getElementById('details-tab').classList.add('text-gray-500');
+        });
+        
+        document.getElementById('details-tab').addEventListener('click', function() {
+            document.getElementById('statistics-content').classList.add('hidden');
+            document.getElementById('details-content').classList.remove('hidden');
+            document.getElementById('statistics-tab').classList.remove('text-blue-600', 'border-b-2', 'border-blue-600', 'font-medium');
+            document.getElementById('statistics-tab').classList.add('text-gray-500');
+            document.getElementById('details-tab').classList.add('text-blue-600', 'border-b-2', 'border-blue-600', 'font-medium');
+            document.getElementById('details-tab').classList.remove('text-gray-500');
+        });
+        
+        // Modal handling for view buttons
+        const viewButtons = document.querySelectorAll('button.text-indigo-600');
+        const modal = document.getElementById('image-modal');
+        const closeModal = document.getElementById('close-modal');
+        
+        viewButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+            });
+        });
+        
+        closeModal.addEventListener('click', function() {
+            modal.classList.add('hidden');
+        });
+        
+        // Charts
+        window.onload = function() {
+            // Category Pie Chart
+            const categoryPieCtx = document.getElementById('categoryPieChart').getContext('2d');
+            new Chart(categoryPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Paper', 'Glass', 'Metal', 'Others'],
+                    datasets: [{
+                        label: 'Classifications by Bin Category',
+                        data: [42, 35, 28, 40],
+                        backgroundColor: [
+                            '#fcd34d', // paper - yellow
+                            '#60a5fa', // glass - blue
+                            '#9ca3af', // metal - gray
+                            '#a3e635', // others - green
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+            
+            // Original Class Pie Chart
+            const originalClassPieCtx = document.getElementById('originalClassPieChart').getContext('2d');
+            new Chart(originalClassPieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Cardboard', 'Glass', 'Metal', 'Paper', 'Plastic', 'Trash'],
+                    datasets: [{
+                        label: 'Classifications by Original Class',
+                        data: [25, 35, 28, 17, 25, 15],
+                        backgroundColor: [
+                            '#f97316', // cardboard - orange
+                            '#60a5fa', // glass - blue
+                            '#9ca3af', // metal - gray
+                            '#fcd34d', // paper - yellow
+                            '#10b981', // plastic - green
+                            '#6b7280', // trash - dark gray
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+            
+            // Accuracy Bar Chart
+            const accuracyBarCtx = document.getElementById('accuracyBarChart').getContext('2d');
+            new Chart(accuracyBarCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Correct', 'Corrected'],
+                    datasets: [{
+                        label: 'Classification Accuracy',
+                        data: [128, 17],
+                        backgroundColor: [
+                            '#4ade80', // correct - green
+                            '#f87171', // corrected - red
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Classification Accuracy'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html> 
